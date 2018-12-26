@@ -22,65 +22,7 @@
 	SOFTWARE.
 */
 
-#ifdef _WIN32
-#include <mutex>
-typedef void* Thread;
-#else
-#include <stdint.h>
-typedef pthread_t Thread;
-#endif
-
 #include <string>
-#include <vector>
-
-
-#pragma once
-
-
-#ifndef _WIN32
-
-/// Mutex class
-
-class Mutex
-{
-public:
-	Mutex();
-	~Mutex();
-	void lock();
-	bool tryLock();
-	void unlock();
-
-private:
-	pthread_mutex_t _mutex;
-};
-
-/// ScopedLock class
-
-template <class M>
-class ScopedLock
-{
-public:
-	explicit ScopedLock(M& mutex) : _mutex(mutex)
-	{
-		_mutex.lock();
-	}
-	~ScopedLock()
-	{
-		try
-		{
-			_mutex.unlock();
-		}
-		catch (...)
-		{
-			// nothing to do
-		}
-	}
-
-private:
-	M& _mutex;
-};
-
-#endif
 
 class UDSSocket
 {
@@ -98,40 +40,22 @@ public:
 		ERR_RECV_FRAME_SIZE_ZERO = 109,
 	};
 	typedef int socket_t;
-	typedef std::vector<uint8_t> sockbuff;
 	typedef void(*onOpen)(const std::string& url);
 	typedef void(*onClose)(const std::string& url);
 	typedef void(*onError)(const std::string& msg, const int errNo);
-	enum { UDSSOCKET_VERSION = 0x0A010201 }; // reserved.major.minor.revision
-	struct UDSFrame
-		/// 송수신 프레임을 정의함
-	{
-		unsigned headerSize;/// 헤더 사이즈
-		bool 	 fin;		/// false: 연속 프레임, true: 완전한 프레임
-		int 	 N0;		/// 헤더 길이 (uint8_t: 0~126, uint16_t:127, uint64_t:128)
-		uint64_t N;			/// 프레임 전체 사이즈
-	};
 
-public:
 	UDSSocket(onOpen open, onClose close, onError error);
-
 	virtual ~UDSSocket();
 
-public:
 	bool listen(const std::string& pathAndFilename);
-
 	bool listening() const;
-
 	bool open(const std::string& pathAndFilename);
-
 	bool opened() const;
-
 	bool close();
 
 protected:
 	virtual bool disconnect();
 
-protected:
 	onOpen		_onOpen;
 	onClose		_onClose;
 	onError		_onError;
@@ -142,8 +66,6 @@ protected:
 
 	bool		_unlinkFile;
 };
-
-/// inline
 
 inline bool UDSSocket::listening() const
 {

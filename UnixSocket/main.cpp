@@ -22,8 +22,6 @@
 	SOFTWARE.
 */
 
-#include <fstream>
-#include <iterator>
 #include <iostream>
 #include <ws2tcpip.h>
 
