@@ -158,12 +158,39 @@ private:
 	int			_code;
 };
 
+static bool setBlocking(socket_t sockfd, bool blocking)
+{
+	if (sockfd == -1)
+		return false;
+	try
+	{
+#ifdef _WIN32
+		u_long on = !blocking;
+		ioctlsocket(sockfd, FIONBIO, &on);
+#else
+		int old = fcntl(sockfd, F_GETFL);
+		int flag = 0;
+		if (blocking)
+			flag = old & ~O_NONBLOCK;
+		else
+			flag = old | O_NONBLOCK;
+		fcntl(sockfd, F_SETFL, flag);
+#endif
+		return true;
+	}
+	catch (...) {
+		// nothing to do
+	}
+	return false;
+}
+
 UDSSocket::UDSSocket(onOpen open, onClose close, onError error)
 	: _onOpen(open)
 	, _onClose(close)
 	, _onError(error)
 	, _client(-1)
 	, _server(-1)
+	, _recvThread(0)
 	, _unlinkFile(false)
 {
 
@@ -277,10 +304,19 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 				ERR_CLIENT_UNABLE_TO_CONNECT);
 		}
 
+#ifdef _WIN32
+		_recvThread = CreateThread(NULL, 0, UDSSocket::recv, (void*)this, 0, NULL);
+		if (_recvThread == 0) {
+			throw Exception("ERROR: Failed to created thread", ERR_RECV_THREAD_INVALID);
+		}
+#else
+		int handle = pthread_create(&_recvThread, NULL, &UDSSocket::recv, this);
+		if (handle != 0) {
+			throw Exception("ERROR: Failed to created thread", ERR_RECV_THREAD_INVALID);
+		}
+#endif
 		if (opened() && _onOpen)
 			_onOpen(_uri);
-
-		
 
 		return opened();
 	}
