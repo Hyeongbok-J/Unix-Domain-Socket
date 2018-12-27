@@ -62,7 +62,7 @@ int main(void)
 #ifdef WIN32
 	std::string uds = "d://UnixSocket";
 #else
-	std::string uds = "/tmp/UnixSocket";
+	std::string uds = "/tmp/UnixSocket.sock";
 #endif
 	bool prompt = true;
 	while (prompt)
