@@ -396,7 +396,7 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 		// UDS 클라이언트 소켓으로 UDS소켓 서버에 접속함
 		int connected = connect(sockfd, (struct sockaddr *)&addr, sizeof(addr));
 		
-		printf("connected=", connected);
+		printf("connected=%d\n", connected);
 		
 		if (connected != 0) {
 			closesocket(sockfd);
