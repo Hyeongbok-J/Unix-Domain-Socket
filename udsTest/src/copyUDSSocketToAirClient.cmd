@@ -1,1 +1,0 @@
-copy /y udssocket.* ..\..\airClientSdkTest\src
