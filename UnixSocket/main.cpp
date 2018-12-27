@@ -22,6 +22,7 @@
 	SOFTWARE.
 */
 
+#include <fstream>
 #include <iostream>
 #ifdef _WIN32
 #include <ws2tcpip.h>
