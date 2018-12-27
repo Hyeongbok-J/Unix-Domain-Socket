@@ -24,7 +24,7 @@
 
 #ifdef _WIN32
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS // _CRT_SECURE_NO_WARNINGS for sscanf errors in MSVC2013 Express
 #endif
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -51,6 +51,7 @@ typedef SOCKET socket_t;
 #define snprintf _snprintf_s
 #endif
 #if _MSC_VER >=1600
+// vs2010 or later
 #include <stdint.h>
 #else
 typedef __int8 int8_t;

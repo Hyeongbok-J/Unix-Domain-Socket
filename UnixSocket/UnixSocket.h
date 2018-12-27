@@ -23,14 +23,61 @@
 */
 
 #ifdef _WIN32
-#include <mutex>
-typedef void* Thread;
+	#include <mutex>
+	typedef void* Thread;
 #else
-#include <stdint.h>
-typedef pthread_t Thread;
+	#include <stdint.h>
+	typedef pthread_t Thread;
 #endif
 
 #include <string>
+
+#pragma once
+
+#ifndef _WIN32
+
+	/// Mutex class
+
+	class Mutex
+	{
+	public:
+		Mutex();
+		~Mutex();
+		void lock();
+		bool tryLock();
+		void unlock();
+
+	private:
+		pthread_mutex_t _mutex;
+	};
+
+	/// ScopedLock class
+
+	template <class M>
+	class ScopedLock
+	{
+	public:
+		explicit ScopedLock(M& mutex) : _mutex(mutex)
+		{
+			_mutex.lock();
+		}
+		~ScopedLock()
+		{
+			try
+			{
+				_mutex.unlock();
+			}
+			catch (...)
+			{
+				// nothing to do
+			}
+		}
+
+	private:
+		M& _mutex;
+	};
+
+#endif
 
 class UDSSocket
 {
