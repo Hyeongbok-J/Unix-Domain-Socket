@@ -159,6 +159,53 @@ private:
 	int			_code;
 };
 
+#ifndef _WIN32
+
+/// Mutex class
+
+Mutex::Mutex()
+{
+	pthread_mutexattr_t attr;
+	pthread_mutexattr_init(&attr);
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	if (pthread_mutex_init(&_mutex, &attr))
+	{
+		pthread_mutexattr_destroy(&attr);
+		throw Exception("cannot create mutex", 0);
+	}
+	pthread_mutexattr_destroy(&attr);
+}
+
+Mutex::~Mutex()
+{
+	pthread_mutex_destroy(&_mutex);
+}
+
+void Mutex::lock()
+{
+	if (pthread_mutex_lock(&_mutex))
+		throw Exception("cannot lock mutex", 0);
+}
+
+bool Mutex::tryLock()
+{
+	int rc = pthread_mutex_trylock(&_mutex);
+	if (rc == 0)
+		return true;
+	else if (rc == EBUSY)
+		return false;
+	else
+		throw Exception("cannot lock mutex", 0);
+}
+
+void Mutex::unlock()
+{
+	if (pthread_mutex_unlock(&_mutex))
+		throw Exception("cannot unlock mutex", 0);
+}
+
+#endif
+
 static bool setBlocking(socket_t sockfd, bool blocking)
 {
 	if (sockfd == -1)
@@ -437,7 +484,7 @@ void* UDSSocket::recv(void* thisPtr)
 }
 
 void UDSSocket::recvTest() {
-	
+
 	char buf[4096];
 
 	while (true)
