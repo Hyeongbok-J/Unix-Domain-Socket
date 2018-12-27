@@ -23,11 +23,11 @@
 */
 
 #include <iostream>
+#ifdef _WIN32
 #include <ws2tcpip.h>
+#endif
 
 #include "UnixSocket.h"
-
-#pragma comment(lib, "Ws2_32.lib")
 
 void onOpen(const std::string& url)
 {
