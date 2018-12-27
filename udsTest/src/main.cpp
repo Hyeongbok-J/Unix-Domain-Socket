@@ -242,10 +242,6 @@ int main(void)
 #else
 	std::string uds = "/tmp/uds.1234";
 #endif
-	if (!server.listen(uds.c_str())) {
-        printf("server: init error\n");
-	}
-
 	bool prompt = true;
 	while (prompt)
 	{
