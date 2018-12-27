@@ -160,7 +160,7 @@ private:
 	int			_code;
 };
 
-#ifndef _WIN32
+/*#ifndef _WIN32
 
 /// Mutex class
 
@@ -205,7 +205,7 @@ void Mutex::unlock()
 		throw Exception("cannot unlock mutex", 0);
 }
 
-#endif
+#endif*/
 
 static bool setBlocking(socket_t sockfd, bool blocking)
 {
