@@ -64,6 +64,7 @@
 	#define SLEEP Sleep
 	#define UNLINK _unlink
 #else
+	#include <pthread.h>
     #include <fcntl.h>
     #include <netdb.h>
     #include <netinet/tcp.h>
