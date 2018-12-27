@@ -69,6 +69,7 @@ typedef unsigned __int64 uint64_t;
 #define SLEEP Sleep
 #define UNLINK _unlink
 #else
+#include <pthread.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/tcp.h>
@@ -83,7 +84,6 @@ typedef unsigned __int64 uint64_t;
 #include <sys/un.h>
 #include <unistd.h>
 #include <stdint.h>
-#include <pthread.h>
 #ifndef _SOCKET_T_DEFINED
 typedef int socket_t;
 #define _SOCKET_T_DEFINED
