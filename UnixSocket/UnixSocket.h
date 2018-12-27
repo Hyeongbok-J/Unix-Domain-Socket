@@ -28,7 +28,7 @@
 #else
 	#include <stdint.h>
 	#include <pthread.h>
-	pthread_t Thread;
+	typedef pthread_t Thread;
 #endif
 
 #include <string>
