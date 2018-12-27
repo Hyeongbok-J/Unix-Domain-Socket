@@ -384,7 +384,7 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 			throw Exception("ERROR: Failed to socket handle", ERR_SOCKET_HANDLE);
 		}
 		_client = sockfd;
-		printf("socket: sockfd=%d, path=%s\n", _server, pathAndFilename.c_str());
+		printf("socket: sockfd=%d, path=%s\n", _client, pathAndFilename.c_str());
 
 		// UDS 클라이언트 소켓이 접속할 파일을 지정함
 		// - UDS 서버가 미리 실행하고 반드시 리스닝하고 있지 않으면 예외가 발생함
@@ -395,6 +395,9 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 
 		// UDS 클라이언트 소켓으로 UDS소켓 서버에 접속함
 		int connected = connect(sockfd, (struct sockaddr *)&addr, sizeof(addr));
+		
+		printf("connected=", connected);
+		
 		if (connected != 0) {
 			closesocket(sockfd);
 			throw Exception(
