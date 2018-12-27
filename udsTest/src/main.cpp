@@ -257,6 +257,10 @@ int main(void)
 			if (!server.listen(uds.c_str())) {
 		        printf("client: init error\n");
 			}
+		} else if (msg == "open") {
+			if (!server.open(uds.c_str())) {
+				printf("server: init error\n");
+			}
 #if false
 		} else if (msg == "large") {
 			printf("[UDS: Send Large Test]\n");
