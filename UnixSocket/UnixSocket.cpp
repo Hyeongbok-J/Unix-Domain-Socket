@@ -228,7 +228,7 @@ bool UDSSocket::listen(const std::string& pathAndFilename)
 
 		while (true)
 		{
-			ZeroMemory(buf, 4096);
+			memset(buf, 0, 4096);
 
 			int bytesReceived = ::recv(_client, buf, 4096, 0);
 
@@ -306,7 +306,7 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 
 				if (sendResult != SOCKET_ERROR)
 				{
-					ZeroMemory(buf, 4096);
+					memset(buf, 0, 4096);
 
 					int bytesReceived = ::recv(_client, buf, 4096, 0);
 					if (bytesReceived > 0)

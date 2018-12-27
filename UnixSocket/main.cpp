@@ -93,6 +93,9 @@ int main(void)
 
 		}
 	}
+
+#ifdef _WIN32
 	WSACleanup();
+#endif
 	return 0;
 }
