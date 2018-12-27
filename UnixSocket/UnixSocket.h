@@ -28,7 +28,7 @@
 #else
 	#include <stdint.h>
 	#include <pthread.h>
-	typedef pthread_t Thread;
+	pthread_t Thread;
 #endif
 
 #include <string>
@@ -130,11 +130,11 @@ protected:
 	socket_t	_server;
 	socket_t	_client;
 	std::string	_uri;
-/*#ifdef _WIN32
+#ifdef _WIN32
 	std::mutex	_mutex;
 #else
 	Mutex		_mutex;
-#endif*/
+#endif
 	Thread		_recvThread;
 	bool		_unlinkFile;
 };
