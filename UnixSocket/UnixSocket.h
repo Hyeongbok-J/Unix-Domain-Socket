@@ -27,6 +27,7 @@
 	typedef void* Thread;
 #else
 	#include <stdint.h>
+	#include <pthread.h>
 	typedef pthread_t Thread;
 #endif
 
