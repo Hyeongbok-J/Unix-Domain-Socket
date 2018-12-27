@@ -339,6 +339,19 @@ bool UDSSocket::close()
 		if (opened() || listening())
 			disconnect();
 
+		if (_recvThread) {
+#ifdef _WIN32
+			WaitForSingleObject(_recvThread, INFINITE);
+#else
+			pthread_join(_recvThread, NULL);
+#endif
+			_recvThread = 0;
+		}
+		else {
+			if (_onClose)
+				_onClose(_uri);
+		}
+
 		if (_unlinkFile) {
 			UNLINK(_uri.c_str());
 			printf("unlink: _uri=%s\n", _uri.c_str());
