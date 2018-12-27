@@ -22,6 +22,14 @@
 	SOFTWARE.
 */
 
+#ifdef _WIN32
+#include <mutex>
+typedef void* Thread;
+#else
+#include <stdint.h>
+typedef pthread_t Thread;
+#endif
+
 #include <string>
 
 class UDSSocket
@@ -53,17 +61,29 @@ public:
 	bool opened() const;
 	bool close();
 
+	void sendTest();
+
 protected:
 	virtual bool disconnect();
 
+	virtual void recvTest();
+
+#ifdef _WIN32
+	static unsigned long __stdcall recv(void* thisPtr);
+#else
+	static void* recv(void* thisPtr);
+#endif
+
+protected:
 	onOpen		_onOpen;
 	onClose		_onClose;
 	onError		_onError;
-
+	
 	socket_t	_server;
 	socket_t	_client;
 	std::string	_uri;
 
+	Thread		_recvThread;
 	bool		_unlinkFile;
 };
 

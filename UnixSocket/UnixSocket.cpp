@@ -219,34 +219,22 @@ bool UDSSocket::listen(const std::string& pathAndFilename)
 		_client = sockfd;
 		printf("accept: _client=%d\n", _client);
 
+#ifdef _WIN32
+		_recvThread = CreateThread(NULL, 0, UDSSocket::recv, (void*)this, 0, NULL);
+		if (_recvThread == 0) {
+			throw Exception("ERROR: Failed to created thread", ERR_RECV_THREAD_INVALID);
+		}
+#else
+		int handle = pthread_create(&_recvThread, NULL, &UDSSocket::recv, this);
+		if (handle != 0) {
+			throw Exception("ERROR: Failed to created thread", ERR_RECV_THREAD_INVALID);
+		}
+#endif
+		_unlinkFile = true;
+
 		if (listening() && _onOpen)
 			_onOpen(_uri);
 
-		closesocket(_server);
-
-		char buf[4096];
-
-		while (true)
-		{
-			memset(buf, 0, 4096);
-
-			int bytesReceived = ::recv(_client, buf, 4096, 0);
-
-			if (bytesReceived == SOCKET_ERROR)
-			{
-				std::cerr << "Error in recv(). Quitting" << std::endl;
-				break;
-			}
-
-			if (bytesReceived == 0)
-			{
-				std::cout << "Client disconnected " << std::endl;
-				break;
-			}
-
-			::send(_client, buf, bytesReceived + 1, 0);
-		}
-		_unlinkFile = true;
 		return listening();
 	}
 	catch (Exception& exc) {
@@ -292,30 +280,7 @@ bool UDSSocket::open(const std::string& pathAndFilename)
 		if (opened() && _onOpen)
 			_onOpen(_uri);
 
-		char buf[4096];
-		std::string userInput;
-
-		do
-		{
-			std::cout << "> ";
-			getline(std::cin, userInput);
-
-			if (userInput.size() > 0)
-			{
-				int sendResult = ::send(_client, userInput.c_str(), userInput.size() + 1, 0);
-
-				if (sendResult != SOCKET_ERROR)
-				{
-					memset(buf, 0, 4096);
-
-					int bytesReceived = ::recv(_client, buf, 4096, 0);
-					if (bytesReceived > 0)
-					{
-						std::cout << "SERVER >> " << std::string(buf, 0, bytesReceived) << std::endl;
-					}
-				}
-			}
-		} while (userInput.size() > 0);
+		
 
 		return opened();
 	}
@@ -391,4 +356,86 @@ bool UDSSocket::disconnect()
 			_onError(std::string("disconnect: unknown error"), (int)ERR_UNKNOWN);
 	}
 	return disconnected;
+}
+
+#ifdef _WIN32
+unsigned long UDSSocket::recv(void* thisPtr)
+#else
+void* UDSSocket::recv(void* thisPtr)
+#endif
+{
+	UDSSocket* uds = (UDSSocket*)thisPtr;
+	if (uds)
+	{
+		try
+		{
+			if (uds->opened()) { uds->recvTest(); }
+		}
+		catch (Exception& exc) {
+			if (uds->_onError)
+				uds->_onError(std::string("recv thread: ") + exc.displayText(), exc.code());
+		}
+		catch (...) {
+			if (uds->_onError)
+				uds->_onError(std::string("recv thread: unknown error"), (int)ERR_UNKNOWN);
+		}
+		if (uds->_onClose)
+			uds->_onClose(uds->_uri);
+		printf("recv thread: quit\n");
+	}
+	return 0;
+}
+
+void UDSSocket::recvTest() {
+	
+	char buf[4096];
+
+	while (true)
+	{
+		memset(buf, 0, 4096);
+
+		int bytesReceived = ::recv(_client, buf, 4096, 0);
+
+		if (bytesReceived == SOCKET_ERROR)
+		{
+			std::cerr << "Error in recv(). Quitting" << std::endl;
+			break;
+		}
+
+		if (bytesReceived == 0)
+		{
+			std::cout << "Client disconnected " << std::endl;
+			break;
+		}
+
+		::send(_client, buf, bytesReceived + 1, 0);
+	}
+}
+
+void UDSSocket::sendTest() {
+
+	char buf[4096];
+	std::string userInput;
+
+	do
+	{
+		std::cout << "> ";
+		getline(std::cin, userInput);
+
+		if (userInput.size() > 0)
+		{
+			int sendResult = ::send(_client, userInput.c_str(), userInput.size() + 1, 0);
+
+			if (sendResult != SOCKET_ERROR)
+			{
+				memset(buf, 0, 4096);
+
+				int bytesReceived = ::recv(_client, buf, 4096, 0);
+				if (bytesReceived > 0)
+				{
+					std::cout << "SERVER >> " << std::string(buf, 0, bytesReceived) << std::endl;
+				}
+			}
+		}
+	} while (userInput.size() > 0);
 }

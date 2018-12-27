@@ -58,7 +58,7 @@ int main(void)
 	}
 #endif
 	UDSSocket server(onOpen, onClose, onError);
-	printf("Input command[listen, open, close, exit]:\n");
+	printf("Input command[listen, open, send, close, exit]:\n");
 #ifdef WIN32
 	std::string uds = "d://UnixSocket";
 #else
@@ -79,6 +79,10 @@ int main(void)
 			if (!server.open(uds.c_str()))
 				printf("server: init error\n");
 		}
+		else if (msg == "send")
+		{
+			server.sendTest();
+		}
 		else if (msg == "close")
 		{
 			if (server.opened())
@@ -93,7 +97,6 @@ int main(void)
 
 		}
 	}
-
 #ifdef _WIN32
 	WSACleanup();
 #endif
