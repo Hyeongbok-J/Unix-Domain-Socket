@@ -22,7 +22,7 @@
 	typedef void* Thread;
 #else
     #include <stdint.h>
-	typedef pthread_t Thread;
+	pthread_t Thread;
 #endif
 
 #include <string>
