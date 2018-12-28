@@ -1,6 +1,6 @@
-# Foobar
+# Unix Domain Socket
 
-Foobar is a Python library for dealing with word pluralization.
+A Unix domain socket or IPC socket (inter-process communication socket) is a data communications endpoint for exchanging data between processes executing on the same host operating system.
 
 ## Installation
 
