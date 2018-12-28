@@ -2,7 +2,7 @@
 
 A Unix domain socket or IPC socket (inter-process communication socket) is a data communications endpoint for exchanging data between processes executing on the same host operating system.
 
-## Build
+## Build and Run
 Windows
 ```
 Visual Studio 2017
@@ -11,16 +11,6 @@ Visual Studio 2017
 Linux
 ```
 g++ -o UnixSocket main.cpp UnixSocket.cpp UnixSocket.h -pthread
-```
-
-## Run
-Windows
-```
-Visual Studio 2017
-```
-
-Linux
-```
 ./UnixSocket
 ```
 
