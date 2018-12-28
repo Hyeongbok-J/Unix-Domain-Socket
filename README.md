@@ -1,5 +1,5 @@
-# What is this?
-It's echo server-client program source using unix domain socket.
+# Unix Domain Socket
+echo server-client using unix domain socket.
 
 ## Build and Run
 Windows
