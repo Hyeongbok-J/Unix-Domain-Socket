@@ -9,9 +9,10 @@ Visual Studio 2017
 ```
 
 Linux
+command [listen] -> server
+command [open] -> client
 ```
 $g++ -o UnixSocket main.cpp UnixSocket.cpp UnixSocket.h -pthread
-
 $./UnixSocket
 ```
 
