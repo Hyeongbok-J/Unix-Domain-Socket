@@ -5,7 +5,7 @@ A Unix domain socket or IPC socket (inter-process communication socket) is a dat
 ## Build
 
 ```bash
-g++ main.cpp UnixSocket.cpp UnixSocket.h
+g++ main.cpp
 ```
 
 ## Usage
