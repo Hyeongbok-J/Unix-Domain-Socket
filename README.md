@@ -1,6 +1,5 @@
-# Unix Domain Socket
-
-A Unix domain socket or IPC socket (inter-process communication socket) is a data communications endpoint for exchanging data between processes executing on the same host operating system.
+# What is this?
+It's echo server-client program source using unix domain socket.
 
 ## Build and Run
 Windows
