@@ -5,17 +5,13 @@ A Unix domain socket or IPC socket (inter-process communication socket) is a dat
 ## Build
 
 ```bash
-g++ main.cpp
+g++ -o UnixSocket main.cpp UnixSocket.cpp UnixSocket.h -pthread
 ```
 
-## Usage
+## Run
 
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
+```
+./UnixSocket
 ```
 
 ## Contributing
