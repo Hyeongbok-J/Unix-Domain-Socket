@@ -12,9 +12,6 @@ Linux
 ```
 $g++ -o UnixSocket main.cpp UnixSocket.cpp UnixSocket.h -pthread
 $./UnixSocket
-
-command [listen] -> server
-command [open] -> client
 ```
 
 ## License
