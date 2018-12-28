@@ -15,8 +15,8 @@ $./UnixSocket
 ```
 
 ## Usage
+command
 ```
-command 
 [listen] -> wait for client
 [open] -> connect to server
 [send] -> send message to server and receive it from server
