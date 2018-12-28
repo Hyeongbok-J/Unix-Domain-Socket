@@ -2,12 +2,10 @@
 
 A Unix domain socket or IPC socket (inter-process communication socket) is a data communications endpoint for exchanging data between processes executing on the same host operating system.
 
-## Installation
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## Build
 
 ```bash
-pip install foobar
+g++ main.cpp UnixSocket.cpp UnixSocket.h
 ```
 
 ## Usage
